@@ -1,0 +1,50 @@
+/*--------------------------------------------------------------
+# Service Section
+--------------------------------------------------------------*/
+.services .service-item {
+  color: color-mix(in srgb, var(--default-color), transparent 20%);
+}
+
+.services .service-item+.service-item {
+  margin-top: 100px;
+}
+
+@media (max-width: 640px) {
+  .services .service-item+.service-item {
+    margin-top: 40px;
+  }
+}
+
+.services .service-item h3 {
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.services .service-item ul {
+  list-style: none;
+  padding: 0;
+}
+
+.services .service-item ul li {
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.services .service-item ul li:last-child {
+  padding-bottom: 0;
+}
+
+.services .service-item ul i {
+  font-size: 20px;
+  padding-right: 4px;
+  color: var(--accent-color);
+}
+
+.services .service-item p:last-child {
+  margin-bottom: 0;
+}
+
+.services .service-item img {
+  max-height: 450px;
+}
