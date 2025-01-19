@@ -1,20 +1,24 @@
-import { Component, OnInit, HostListener, Renderer2 } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  HostListener,
+  Renderer2,
+  Inject,
+} from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import AOS from 'aos';
 import GLightbox from 'glightbox';
 import PureCounter from '@srexi/purecounterjs';
-import Swiper from 'swiper';  // Import Swiper
+import Swiper from 'swiper'; // Import Swiper
 
 @Component({
   selector: 'fourin-header',
   standalone: true,
   imports: [],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
-
-  
-
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
     this.toggleScrolledClass();
@@ -28,7 +32,10 @@ export class HeaderComponent implements OnInit {
     this.toggleScrollTopVisibility();
   }
 
-  constructor(private renderer: Renderer2) {}
+  constructor(
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
 
   ngOnInit(): void {
     this.initMobileNavToggle();
@@ -46,7 +53,11 @@ export class HeaderComponent implements OnInit {
   private toggleScrolledClass(): void {
     const body = document.querySelector('body');
     const header = document.querySelector('#header');
-    if (header?.classList.contains('scroll-up-sticky') || header?.classList.contains('sticky-top') || header?.classList.contains('fixed-top')) {
+    if (
+      header?.classList.contains('scroll-up-sticky') ||
+      header?.classList.contains('sticky-top') ||
+      header?.classList.contains('fixed-top')
+    ) {
       window.scrollY > 100
         ? body?.classList.add('scrolled')
         : body?.classList.remove('scrolled');
@@ -70,7 +81,9 @@ export class HeaderComponent implements OnInit {
     navmenuLinks.forEach((link) => {
       link.addEventListener('click', () => {
         if (document.querySelector('.mobile-nav-active')) {
-          const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle') as HTMLElement;
+          const mobileNavToggleBtn = document.querySelector(
+            '.mobile-nav-toggle'
+          ) as HTMLElement;
           mobileNavToggleBtn?.click();
         }
       });
@@ -80,14 +93,19 @@ export class HeaderComponent implements OnInit {
   private updateNavmenuScrollspy(): void {
     const navmenuLinks = document.querySelectorAll('.navmenu a');
     navmenuLinks.forEach((link) => {
-      const anchorLink = link as HTMLAnchorElement;  // Cast to HTMLAnchorElement
+      const anchorLink = link as HTMLAnchorElement; // Cast to HTMLAnchorElement
       if (!anchorLink.hash) return;
       const section = document.querySelector(anchorLink.hash);
       if (!section) return;
-      const sectionElement = section as HTMLElement;  // Cast to HTMLElement
+      const sectionElement = section as HTMLElement; // Cast to HTMLElement
       const position = window.scrollY + 200;
-      if (position >= sectionElement.offsetTop && position <= sectionElement.offsetTop + sectionElement.offsetHeight) {
-        document.querySelectorAll('.navmenu a.active').forEach((activeLink) => activeLink.classList.remove('active'));
+      if (
+        position >= sectionElement.offsetTop &&
+        position <= sectionElement.offsetTop + sectionElement.offsetHeight
+      ) {
+        document
+          .querySelectorAll('.navmenu a.active')
+          .forEach((activeLink) => activeLink.classList.remove('active'));
         anchorLink.classList.add('active');
       } else {
         anchorLink.classList.remove('active');
@@ -96,12 +114,16 @@ export class HeaderComponent implements OnInit {
   }
 
   private initDropdownToggle(): void {
-    const dropdownToggles = document.querySelectorAll('.navmenu .toggle-dropdown');
+    const dropdownToggles = document.querySelectorAll(
+      '.navmenu .toggle-dropdown'
+    );
     dropdownToggles.forEach((toggle) => {
       toggle.addEventListener('click', (event) => {
         event.preventDefault();
         toggle.parentElement?.classList.toggle('active');
-        toggle.parentElement?.nextElementSibling?.classList.toggle('dropdown-active');
+        toggle.parentElement?.nextElementSibling?.classList.toggle(
+          'dropdown-active'
+        );
         event.stopImmediatePropagation();
       });
     });
@@ -113,7 +135,7 @@ export class HeaderComponent implements OnInit {
       event.preventDefault();
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     });
   }
@@ -136,13 +158,17 @@ export class HeaderComponent implements OnInit {
 
   private correctScrollPositionOnLoad(): void {
     if (window.location.hash) {
-      const section = document.querySelector(window.location.hash) as HTMLElement;;
+      const section = document.querySelector(
+        window.location.hash
+      ) as HTMLElement;
       if (section) {
         setTimeout(() => {
-          const scrollMarginTop = parseInt(getComputedStyle(section).scrollMarginTop);
+          const scrollMarginTop = parseInt(
+            getComputedStyle(section).scrollMarginTop
+          );
           window.scrollTo({
             top: section.offsetTop - scrollMarginTop,
-            behavior: 'smooth'
+            behavior: 'smooth',
           });
         }, 100);
       }
@@ -151,12 +177,21 @@ export class HeaderComponent implements OnInit {
 
   private initAOS(): void {
     // Replace AOS.init with its Angular-compatible initialization
-    import('aos').then((AOS) => AOS.init({ duration: 600, easing: 'ease-in-out', once: true, mirror: false }));
+    import('aos').then((AOS) =>
+      AOS.init({
+        duration: 600,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false,
+      })
+    );
   }
 
   private initGLightbox(): void {
     // Replace GLightbox initialization with its Angular-compatible version
-    import('glightbox').then(({ default: GLightbox }) => GLightbox({ selector: '.glightbox' }));
+    import('glightbox').then(({ default: GLightbox }) =>
+      GLightbox({ selector: '.glightbox' })
+    );
   }
 
   // private initPureCounter(): void {
@@ -167,7 +202,9 @@ export class HeaderComponent implements OnInit {
   private initSwiper(): void {
     import('swiper').then(({ default: Swiper }) => {
       document.querySelectorAll('.init-swiper').forEach((swiperElement) => {
-        const config = JSON.parse(swiperElement.querySelector('.swiper-config')!.textContent!.trim());
+        const config = JSON.parse(
+          swiperElement.querySelector('.swiper-config')!.textContent!.trim()
+        );
         new Swiper(swiperElement as HTMLElement, config);
       });
     });
